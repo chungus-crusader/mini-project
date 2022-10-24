@@ -20,44 +20,35 @@ class Node:
 
     # Method to insert new key-value pair
     def put(self, key, value):
+        if self.key == key:
+            self.value = value
+        elif key[0] > self.key[0]:
+            if not self.right:  # If right branch does not exist
+                self.right = Node(key, value)
+            else:  # If right branch exists
+                self.right.put(key, value)
 
-        # Check if key already exists
-        if self.get(key):
-
-            if self.key == key:  # Check if current node has this key
-                self.value = value  # Reassign the value if true
-
-            else:  # If current node's key != key, but key exists elsewhere
-                if self.left:  # If left branch exists
-                    if self.left.get(key):  # If left branch has key
-                        self.left.put(key, value)  # Call itself on left branch
-                        return
-
-                if self.right:  # Else If right branch exists
-                    if self.right.get(key):  # If right branch has key
-                        self.right.put(key, value)  # Call itself on right
-                        return
-
-        else:
-
-            if key[0] > self.key[0]:
-                if not self.right:  # If right branch does not exist
-                    self.right = Node(key, value)
-                else:  # If right branch exists
-                    self.right.put(key, value)
-
-            elif key[0] <= self.key[0]:
-                if not self.left:  # If left branch does not exist
-                    self.left = Node(key, value)
-                else:
-                    self.left.put(key, value)  # If left branch exists
+        elif key[0] <= self.key[0]:
+            if not self.left:  # If left branch does not exist
+                self.left = Node(key, value)
+            else:
+                self.left.put(key, value)  # If left branch exists
 
     # Method to return the entire BST as a string
     def to_string(self):
-        lst = []
-        done = self.as_list(lst)
-        return ' '.join([f"({','.join(map(lambda c: str(c), i))})"
-                        for i in sorted(done)])
+
+        txt = ''
+        txt += f'({self.key},{self.value}) '
+        if self.left:
+            txt += self.left.to_string()
+        if self.right:
+            txt += self.right.to_string()
+
+        txt = ' '.join((sorted(txt.split(' '), key=lambda e: e)))
+        return (txt + ' ').strip() + ' '
+        # done = self.as_list(lst)
+        # return ' '.join([f"({','.join(map(lambda c: str(c), i))})"
+        #                 for i in sorted(done)])
 
     # Method to return total length of the BST
     def count(self):
@@ -97,6 +88,19 @@ class Node:
             return depthR
         else:
             return depthL
+
+    def count_leafs(self):
+
+        count = 0
+        if not self.left and not self.right:
+            count += 1
+
+        if self.left:
+            count += self.left.count_leafs()
+        if self.right:
+            count += self.right.count_leafs()
+
+        return count
 
     # We do a left-to-right in-order traversal of the tree
     # to get the key-value pairs sorted base on their keys
@@ -151,7 +155,7 @@ class BstMap:
             return None
         else:
             return self.root.get(key)
-
+    
     # Returns the maximum tree depth. That is, the length
     # (counted in nodes) of the longest root-to-leaf path
     def max_depth(self):
@@ -159,7 +163,14 @@ class BstMap:
             return 0
         else:
             return self.root.max_depth()
-
+    
+    # r
+    #w
+    def count_leafs(self):
+        if self.root is None:
+            return 0
+        else:
+            return self.root.count_leafs()
     # Returns a sorted list of all key-value pairs in the map.
     # Each key-value pair is represented as a tuple and the
     # list is sorted on the keys ==> left-to-right in-order
