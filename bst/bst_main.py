@@ -39,3 +39,7 @@ print("To_string: ", map.to_string())    # { (AA,1) (AAA,2) (AAAA,3) (AAAAA,4) (
 lst = map.as_list()
 print("\nList size and element type:", len(lst), type(lst[0]))  # 10 <class 'tuple'>
 print("List content:", lst)  # [('AA', 1), ('AAA', 2), ('AAAA', 3), ('AAAAA', 4), ('Adam', 27), ('Ceve', 100), ('Ella', 39), ('Fred', 44), ('Owen', 40), ('Zoe', 99)]
+
+
+for item in lst:
+    print(map.get(item[0]))

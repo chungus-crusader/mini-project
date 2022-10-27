@@ -18,17 +18,40 @@ class Node:
     left: Any = None        # left child (a Node)
     right: Any = None       # right child (a Node)
 
+    def add(self, key, value):
+        res = 0
+
+        if self.key == key:
+            self.value += value
+            res = self.value
+
+        elif key > self.key:
+            if not self.right:  # If right branch does not exist
+                self.right = Node(key, value)
+                res = self.right.value
+            else:  # If right branch exists
+                res = self.right.add(key, value)
+
+        elif key <= self.key:
+            if not self.left:  # If left branch does not exist
+                self.left = Node(key, value)
+                res = self.left.value
+
+            else:
+                res = self.left.add(key, value)  # If left branch exists
+        return res
+
     # Method to insert new key-value pair
     def put(self, key, value):
         if self.key == key:
             self.value = value
-        elif key[0] > self.key[0]:
+        elif key > self.key:
             if not self.right:  # If right branch does not exist
                 self.right = Node(key, value)
             else:  # If right branch exists
                 self.right.put(key, value)
 
-        elif key[0] <= self.key[0]:
+        elif key <= self.key:
             if not self.left:  # If left branch does not exist
                 self.left = Node(key, value)
             else:
@@ -45,6 +68,7 @@ class Node:
             txt += self.right.to_string()
 
         txt = ' '.join((sorted(txt.split(' '), key=lambda e: e)))
+
         return (txt + ' ').strip() + ' '
         # done = self.as_list(lst)
         # return ' '.join([f"({','.join(map(lambda c: str(c), i))})"
@@ -104,6 +128,19 @@ class Node:
 
     # We do a left-to-right in-order traversal of the tree
     # to get the key-value pairs sorted base on their keys
+    def as_sorted_lst(self, lst):
+
+        if self.value > 1 and len(self.key) > 4:
+            lst.append((self.key, self.value))
+
+        if self.left:  # If left branch exists
+            self.left.as_sorted_lst(lst)  # Call itself recursively on left
+        if self.right:  # If right branch exists
+            self.right.as_sorted_lst(lst)
+
+        res = lst
+        return res
+
     def as_list(self, lst):
         lst.append((self.key, self.value))
 
@@ -123,6 +160,13 @@ class Node:
 @dataclass
 class BstMap:
     root: Node = None
+
+    def add(self, key, value):
+        if self.root is None:
+            self.root = Node(key, value, None, None)
+            return 1
+        else:
+            return self.root.add(key, value)
 
     # Adds a key-value pair to the map
     def put(self, key, value):
@@ -155,7 +199,7 @@ class BstMap:
             return None
         else:
             return self.root.get(key)
-    
+
     # Returns the maximum tree depth. That is, the length
     # (counted in nodes) of the longest root-to-leaf path
     def max_depth(self):
@@ -163,17 +207,26 @@ class BstMap:
             return 0
         else:
             return self.root.max_depth()
-    
+
     # r
-    #w
+    # w
     def count_leafs(self):
         if self.root is None:
             return 0
         else:
             return self.root.count_leafs()
+
     # Returns a sorted list of all key-value pairs in the map.
     # Each key-value pair is represented as a tuple and the
     # list is sorted on the keys ==> left-to-right in-order
+    def as_sorted_lst(self):
+        lst = []
+        if self.root is None:
+            return lst
+        else:
+            return list(sorted(self.root.as_sorted_lst(lst),
+                        key=lambda i: i[1], reverse=True))
+
     def as_list(self):
         lst = []
         if self.root is None:
