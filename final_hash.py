@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from typing import List
-import HashSet as hset
 
 
 @dataclass
@@ -15,18 +14,31 @@ class HashSet:
 
     # Computes hash value for a word (a string)
     def get_hash(self, word):
-        sum_of_ascii_codes = 0
-        # add the ascii codes for each character in the string
+        ascii_and_prime = 0
+        # for each letter multiply its ascii code with the prime number 17 to the power of 3
         for char in str(word):
-            sum_of_ascii_codes += ord(char)
+            # the ascii code
+            ascii_and_prime += ord(char) * 17**3
         # return the hash value which is 
         # the sum of adcii codes modolus bucket size
-        return sum_of_ascii_codes % len(self.buckets)
+        bucket_n = len(self.buckets)
+        return ascii_and_prime % bucket_n
+
 
 
     # Doubles size of bucket list
     def rehash(self):
-        pass    # Placeholder code ==> to be replaced
+        # create a clone of our current buckets
+        clone_buckets = self.buckets
+        self.buckets = [[] for i in range(len(self.buckets)*2)]
+        self.size = 0
+        # double bucket size
+        # iterating for each element in the clone bucket
+        for bucket in clone_buckets:
+            for elements in bucket:
+                self.add(elements)
+
+
 
 
     # Adds a word to set if not already added
@@ -35,19 +47,30 @@ class HashSet:
         hash_value = self.get_hash(word)
         # check if the word is not already added
         if word not in self.buckets[hash_value]:
-            # if it is we add a new list with the word in it       
+            # if it is we add a new list with the word in it      
             self.buckets[hash_value].append(word)
+            # since we added 1 item to the list we increase self.size by 1
+            # so our total number of elements counter is correct
+            self.size += 1
+            b_len = len(self.buckets)
+            if self.size >= b_len:
+                self.rehash()
+                
 
 
     # Returns a string representation of the set content
     def to_string(self):
-        for i in self.buckets:
-            return str(i)
+        # we concatenate our string with 1 space in between
+        joined = ' '.join([' '.join(i) for i in self.buckets if i])
+        # returning the string with curly brackets
+        return f'{{ {joined} }}'
+        
+
 
 
     # Returns current number of elements in set
     def get_size(self):
-        return len(self.buckets)
+        return self.size
 
 
     # Returns True if word in set, otherwise False
@@ -57,57 +80,38 @@ class HashSet:
         # returns True if the word is in that bucket
         # returns False if it is not
         return word in self.buckets[hash_value]
-        0
 
 
     # Returns current size of bucket list
     def bucket_list_size(self):
-        pass    # Placeholder code ==> to be replaced
+        return len(self.buckets)
+
 
     # Removes word from set if there, does nothing
     # if word not in set
     def remove(self, word):
         hash_value = self.get_hash(word)
+        # checking if the word is there
         if word in self.buckets[hash_value]:
+            # if it is there it will be removed
             self.buckets[hash_value].remove(word)
+            # since we removed 1 element we have to reduce the self.size by 1
+            # so our total number of elements is correct
+            self.size -= 1
+
 
     # Returns the size of the bucket with most elements
     def max_bucket_size(self):
-        pass    # Placeholder code ==> to be replaced
+        max_bucket_size = max(len(x) for x in self.buckets)
+        return max_bucket_size
 
     # Returns the ratio of buckets of lenght zero.
     # That is: number of zero buckets divided by number of buckets
     def zero_bucket_ratio(self):
-        pass    # Placeholder code ==> to be replaced
-
-
-# Program starts
-# Initialize word set
-words = hset.HashSet()   # Create new empty HashSet
-words.init()             # Initialize with eight empty buckets
-
-# Add names to word set. Notice: a) contains duplicate names,
-# b) more than eight names ==> will trigger rehash
-names = ["Ella", "Owen", "Fred", "Zoe", "Adam", "Ceve", "Adam", "Ceve", "Jonas", "Ola", "Morgan", "Fredrik", "Simon", "Albin", "Jonas", "Amer", "David"]
-for name in names:
-    words.add(name)
-
-print("\nto_string():", words.to_string())  # { Adam David Amer Ceve Owen Ella Jonas Morgan Fredrik Zoe Fred Albin Ola Simon }
-print("get_size():", words.get_size())             # 14
-print("contains(Fred):", words.contains("Fred"))   # True
-print("contains(Bob):", words.contains("Bob"))     # False
-
-# Hash specific data
-mx = words.max_bucket_size()
-print("\nmax bucket:", mx)                # 2
-buckets = words.bucket_list_size()
-print("bucket list size:", buckets)     # 16
-zero_buckets_ratio = words.zero_bucket_ratio()
-print("zero bucket ratio:", round(zero_buckets_ratio, 2))  # 0.38
-
-# Remove elements
-delete = ["Ceve", "Adam", "Ceve", "Jonas", "Ola"]
-for s in delete:
-    words.remove(s)
-print("\nget_size:", words.get_size())   # 10
-print("to_string():", words.to_string())   # { David Amer Owen Ella Morgan Fredrik Zoe Fred Albin Simon }
+        empty_buckets = 0
+        for lst in self.buckets:
+            # if the bucket is "not" filled we add 1 to our empty_bucket counter
+            if not lst:
+                empty_buckets += 1
+        ratio = empty_buckets / len(self.buckets)
+        return ratio
