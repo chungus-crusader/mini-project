@@ -23,23 +23,19 @@ class Node:
 
         if self.key == key:
             self.value += value
-            res = self.value
+            return
 
-        elif key > self.key:
+        if key > self.key:
             if not self.right:  # If right branch does not exist
                 self.right = Node(key, value)
-                res = self.right.value
-            else:  # If right branch exists
-                res = self.right.add(key, value)
+                return
+            self.right.add(key, value)
 
         elif key <= self.key:
             if not self.left:  # If left branch does not exist
                 self.left = Node(key, value)
-                res = self.left.value
-
-            else:
-                res = self.left.add(key, value)  # If left branch exists
-        return res
+                return
+            self.left.add(key, value)  # If left branch exists
 
     # Method to insert new key-value pair
     def put(self, key, value):
@@ -131,7 +127,7 @@ class Node:
     def as_sorted_lst(self, lst):
 
         if self.value > 1 and len(self.key) > 4:
-            lst.append((self.key, self.value))
+            lst.append([self.key, self.value])
 
         if self.left:  # If left branch exists
             self.left.as_sorted_lst(lst)  # Call itself recursively on left
@@ -232,4 +228,5 @@ class BstMap:
         if self.root is None:
             return lst
         else:
-            return self.root.as_list(lst)
+            return list(sorted(self.root.as_list(lst),
+                        key=lambda i: i[0], reverse=True))

@@ -16,16 +16,24 @@ def unique(words):
 
 def count_top(words):
     bin = bst.BstMap()
+    # wrds = [w.lower() for w in words]
+    random.shuffle(words)
 
-    wrds = [w.lower() for w in words]
-    random.shuffle(wrds)
+    for word in words:
+        w = word.lower()
+        bin.add(w, 1)
 
-    for word in wrds:
-        bin.add(word, 1)
+    topTen = list(map(lambda w: [w[0].capitalize(), str(w[1])],
+                  filter(lambda w: len(w[0]) > 4, bin.as_sorted_lst())))
 
-    topTen = bin.as_sorted_lst()  # sorted(lst, key=lambda i: i[1])
+    topTen = '\n'.join(map(lambda pair: ': '.join(pair), topTen[0:10]))
 
-    return topTen[0:9]
+    res = f"""
+Number of tree nodes: {bin.size()}
+Max depth: {bin.max_depth()}
+Leaf count: {bin.count_leafs()}
+    """
+    return f"{res}\n{topTen}"
 # print(unique(brian.read().split('\n')).size)
 # print(unique(news.read().split('\n')).size)
 print(count_top(news.read().split('\n')))
