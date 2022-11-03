@@ -19,7 +19,6 @@ class Node:
     right: Any = None       # right child (a Node)
 
     def add(self, key, value):
-        res = 0
 
         if self.key == key:
             self.value += value
@@ -66,9 +65,6 @@ class Node:
         txt = ' '.join((sorted(txt.split(' '), key=lambda e: e)))
 
         return (txt + ' ').strip() + ' '
-        # done = self.as_list(lst)
-        # return ' '.join([f"({','.join(map(lambda c: str(c), i))})"
-        #                 for i in sorted(done)])
 
     # Method to return total length of the BST
     def count(self):
@@ -228,5 +224,4 @@ class BstMap:
         if self.root is None:
             return lst
         else:
-            return list(sorted(self.root.as_list(lst),
-                        key=lambda i: i[0], reverse=True))
+            return self.root.as_list(lst)
