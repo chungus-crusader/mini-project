@@ -1,4 +1,4 @@
-import final_hash as hset
+from hash import final_hash as hset
 
 
 def start_hashing(lst):
