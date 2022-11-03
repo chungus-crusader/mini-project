@@ -1,20 +1,3 @@
-''' coment or code eg.
-'''
-
-[this file] = blue text saying this file
-
-''golden text to name txt files I assume
-''
-
-## header
-### smaller header
--filled bullet point
-tab then * = sub bullet point (empty)
-
-<img src="http://XXXXXX.png" width="400"/>
-
-
-
 ### About Markdown
 
 Markdown is an easy-to-use plain text formatting syntax created by John Gruber.
