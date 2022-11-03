@@ -47,7 +47,7 @@ In what follow we give you the **mandatory report headlines** and brief comments
 ************************
 
 # Mini-project report 
-Members: Zjeger Zangana and Mickey Mouse  
+Members: Zjeger Zangana and Rodions Busurovs
 Program: Network security (NGDNS-eng)  
 Course: 1DV501 
 Date of submission: 2022-11-XX
