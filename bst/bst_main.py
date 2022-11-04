@@ -29,17 +29,20 @@ map.put("AAA", 2)
 map.put("AAAA", 3)
 map.put("AAAAA", 4)
 
-print("\nSize:", map.size())              # 10
-print("Max depth:", map.max_depth())    # 6
+print("\nSize:", map.size())  # 10
+print("Max depth:", map.max_depth())  # 6
 print("Count leafs:", map.count_leafs())  # 4
-print("To_string: ", map.to_string())    # { (AA,1) (AAA,2) (AAAA,3) (AAAAA,4) (Adam,27) (Ceve,100) (Ella,39) (Fred,44) (Owen,40) (Zoe,99) }
+print("To_string: ", map.to_string())
+# { (AA,1) (AAA,2) (AAAA,3) (AAAAA,4) (Adam,27) 
+# (Ceve,100) (Ella,39) (Fred,44) (Owen,40) (Zoe,99) }
 
 
 # as_list
 lst = map.as_list()
-print("\nList size and element type:", len(lst), type(lst[0]))  # 10 <class 'tuple'>
-print("List content:", lst)  # [('AA', 1), ('AAA', 2), ('AAAA', 3), ('AAAAA', 4), ('Adam', 27), ('Ceve', 100), ('Ella', 39), ('Fred', 44), ('Owen', 40), ('Zoe', 99)]
 
+print("\nList size and element type:", len(lst), type(lst[0]))
+# 10 <class 'tuple'>
 
-for item in lst:
-    print(map.get(item[0]))
+print("List content:", lst)
+# [('AA', 1), ('AAA', 2), ('AAAA', 3), ('AAAAA', 4), ('Adam', 27), ('Ceve', 100),
+# ('Ella', 39), ('Fred', 44), ('Owen', 40), ('Zoe', 99)]

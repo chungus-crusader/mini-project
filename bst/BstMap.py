@@ -18,11 +18,16 @@ class Node:
     left: Any = None        # left child (a Node)
     right: Any = None       # right child (a Node)
 
+    # Methods that adds to value if keys are the same
+    # Instead of overriding the value
     def add(self, key, value):
 
+        # If key == current key, value += value that's passed in
         if self.key == key:
             self.value += value
             return
+
+        # The rest is the same as in put
 
         if key > self.key:
             if not self.right:  # If right branch does not exist
@@ -30,7 +35,7 @@ class Node:
                 return
             self.right.add(key, value)
 
-        elif key <= self.key:
+        elif key < self.key:
             if not self.left:  # If left branch does not exist
                 self.left = Node(key, value)
                 return
@@ -38,32 +43,43 @@ class Node:
 
     # Method to insert new key-value pair
     def put(self, key, value):
-        if self.key == key:
+        if self.key == key:  # If key == key that's passed in
             self.value = value
-        elif key > self.key:
+            return
+
+        if key > self.key:  # If key is > current key
             if not self.right:  # If right branch does not exist
                 self.right = Node(key, value)
-            else:  # If right branch exists
-                self.right.put(key, value)
+                return
+            self.right.put(key, value)  # If right branch exists
 
-        elif key <= self.key:
+        elif key <= self.key:  # If key <= current key
             if not self.left:  # If left branch does not exist
                 self.left = Node(key, value)
-            else:
-                self.left.put(key, value)  # If left branch exists
+                return
+            self.left.put(key, value)  # If left branch exists
 
     # Method to return the entire BST as a string
     def to_string(self):
 
-        txt = ''
+        txt = ''  # Starting string
+
+        # Adding current key and value to the string, as an f-string
         txt += f'({self.key},{self.value}) '
         if self.left:
+
+            # Recursively call itself on left node and
+            # add everything on the left as f-strings
             txt += self.left.to_string()
         if self.right:
+            # Do the same for right node
             txt += self.right.to_string()
 
+        # Split the completed string by whitespace,
+        # sort alphabetically, then join again
         txt = ' '.join((sorted(txt.split(' '), key=lambda e: e)))
 
+        # return txt stripped of trailing whitespace + ' '
         return (txt + ' ').strip() + ' '
 
     # Method to return total length of the BST
@@ -91,26 +107,34 @@ class Node:
                 found = self.right.get(key)
         return found
 
-    def max_depth(self):
+    def max_depth(self):  # Get maximum depth of any one branch
+
+        # Starting depths
         depthL = 1
         depthR = 1
 
+        # depthL += return value of recursive call on next left node
+        # Same for right node, except depthR
         if self.left:
             depthL += self.left.max_depth()
         if self.right:
             depthR += self.right.max_depth()
 
+        # Return depthR if depthL is less than depthR
         if depthL < depthR:
             return depthR
+
+        # Return depthL otherwise
         else:
             return depthL
 
-    def count_leafs(self):
+    def count_leafs(self):  # Counting every leaf (node with no children)
 
-        count = 0
+        count = 0  # Starting count is 0
         if not self.left and not self.right:
-            count += 1
+            count += 1  # += 1 if no children
 
+        # Recursive call on both left and right child if they exist
         if self.left:
             count += self.left.count_leafs()
         if self.right:
@@ -118,30 +142,42 @@ class Node:
 
         return count
 
-    # We do a left-to-right in-order traversal of the tree
-    # to get the key-value pairs sorted base on their keys
+    """
+    Special list method for part 3
+    Does same thing as as_lst, but sorts
+    numerically instead of alphabetically
+    and only returns keys greater than 4 in length
+    """
+
     def as_sorted_lst(self, lst):
 
+        # If value > 1 and length of key > 4
         if self.value > 1 and len(self.key) > 4:
+            # Append key and value as a list
             lst.append([self.key, self.value])
 
         if self.left:  # If left branch exists
             self.left.as_sorted_lst(lst)  # Call itself recursively on left
         if self.right:  # If right branch exists
-            self.right.as_sorted_lst(lst)
+            self.right.as_sorted_lst(lst)  # Same thing for right
 
-        res = lst
-        return res
+        return lst
 
+    # We do a left-to-right in-order traversal of the tree
+    # to get the key-value pairs sorted base on their keys
     def as_list(self, lst):
+
+        # Append current key and value in a tuple to lst
         lst.append((self.key, self.value))
 
         if self.left:  # If left branch exists
             self.left.as_list(lst)  # Call itself recursively on left
         if self.right:  # If right branch exists
-            self.right.as_list(lst)
+            self.right.as_list(lst)  # Same for right :UUU
 
+        # Res = same as lst but sorted alphabetically
         res = list(sorted(lst, key=lambda i: i[0]))
+
         return res  # Return finished string of all elements
 
 

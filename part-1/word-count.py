@@ -44,7 +44,7 @@ bTxt = brian.read()
 # Function calls with some output
 print(f'''\nUnique words in news: {count(nTxt)}
 Unique words in Brian: {count(bTxt)}\n''')
-print(f'Top 10 news words:\n{top(nTxt)}\n\nTop 4 Brian words:\n{top(bTxt)}')
+print(f'Top 10 news words:\n{top(nTxt)}\n\nTop 10 Brian words:\n{top(bTxt)}')
 
 news.close()
 brian.close()
