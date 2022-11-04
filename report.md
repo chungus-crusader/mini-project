@@ -1,7 +1,7 @@
 # Mini-project report 
-Members: Zjeger Zangana and Rodions Busurovs
+Members: Zjeger Zangana and Rodions Busurovs     
 Program: Network security (NGDNS-eng)  
-Course: 1DV501 
+Course: 1DV501          
 Date of submission: 2022-11-XX
 
 ## Introduction  
@@ -87,9 +87,13 @@ both of which expect a string of words, separated by linebreak.
 
 
 ## Part 2: Implementing data structures
-- We were required to make a hash based set where the elements were to be stored in python lists that were stored in buckets which also basically a list. The goal was to start with a bucket list size of 8 and rehash whenever the number of elements in the buckets became the same as the number of buckets. This rehash would simply just double the bucket list size. There were code skeletons made for the hash based set by our tutors that required us to include certain functions. We are allowed to add more functions if we wished so, howvever we were not allowed to remove any of the existing functions. We had to make a hash code for each string in the already existing list in ``hash_main.py``. We weren't given a goal for how good our hashcode had to be so we just tried to make it as good as possible; however, we were told to try to fill as many buckets as possible and not leave most buckets empty. We needed to make an add, remove, contains function along with some other functions that would help us improve our hashfunction later on for part 3 when we introduced the txt files to the hashset.
-- For the hash based word set (HashSet), present (and explain in words):
- 	* The function ``add`` calls the hash function for a specific word and what happens is that we iterate for each character in the word getting the ascci code for it, we also get the index of that character and to get the hashcode for it we run it through this algorithm: 
+- We were required to make a hash based set where the elements were to be stored in python lists that were stored in buckets which also basically a list. 
+- The goal was to start with a bucket list size of 8 and ``rehash()`` whenever the number of elements in the buckets became the same as the number of buckets. This rehash would simply just double the bucket list size. There were code skeletons made for the hash based set by our tutors that required us to include certain functions. 
+- We are allowed to add more functions if we wished so, howvever we were not allowed to remove any of the existing functions.
+- We had to make a hash code for each string in the already existing list in ``hash_main.py``. We weren't given a goal for how good our hashcode had to be however, we were told to try to fill as many buckets as possible and not leave most buckets empty.
+- We needed to make ``add()``, ``remove()``, ``contains()`` functions along with some other functions that would help us improve our hash algorithm later on for part 3 when we introduced the txt files to the hashset.
+:
+ 	* The function ``add()`` calls the hash function for a specific word and what happens is that we iterate for each character in the word getting the ascci code for it, we also get the index of that character and to get the hashcode for it the ascii code of each letter is multiplied by 31 to the power of the index. The sum of that modolus the total amount of buckets gives us the hashcode, this way the smallest difference in the word would give a great difference in hashcode. The algorithm looks like this:
 
 	```python
 	def get_hash(self, word):
@@ -101,12 +105,24 @@ both of which expect a string of words, separated by linebreak.
 			mod = len(self.buckets)
         return ascii_and_prime % mod
 	```
-	basically the ascii code is multiplied by the prime number 31 to the power of the index. What this does is create uniqueness in the hashcode so there is as little collision as possible. I learnt this concept from Dr. Rob Edwards from San Diego State University where he explains how powerful the number 31 is for hashcodes with strings. Some lectures were about java, however the concept is similar and as I played around with it with the index numbers I got that without increasing my computing time that algorithm produced the smallest empty bucket ratio and produced the least amount of collision. Once we have the hashcode, the bucket at that postion is being checked for wheter the word is there or not with the code:
+- Because the ascii code is multiplied by the prime number 31 to the power of the index, it creates uniqueness in the hashcode so there is as little collision as possible. 
+	* I learnt this concept from Dr. Rob Edwards from San Diego State University where he explains how powerful the number 31 is for hashcodes with strings.
+- Some lectures were about java, however the concept is similar and as I played around with the index numbers, I got that without increasing my computing time that algorithm produced the smallest empty bucket ratio and produced the least amount of collision.
+- Once we have the hashcode for a word, the bucket at that postion is being checked for wheter the word is there or not with the code:
 	```python
 		if word not in self.buckets[hash_value]:
 	```
- 	if it was we didnt add it, if it wasn't the word was added to that bucket. The counter for the number of elements was incremented by 1 and then checked if it was equal to the number of buckets. If yes, the rehash function would be called. Once this was called a clone of the buckets was made, the existing buckets were cleared and when the items in the clone buckets was pushed to the new buckets which was twice as many.
-	* After completing all the functions every expected answer was correct in the hash_main besides the empty bucket ratio which had a very small difference.
+ 	* if the word is not in the bucket, we add it else we don't.
+- The counter for the number of elements is then incremented by 1 and then checked if it was equal to the number of buckets.
+	* If yes, the rehash function would be called.
+-  Once this is called, a clone of the buckets is made, the existing buckets are then cleared and when the items in the clone buckets is pushed to the new buckets which iss twice the size. To clear the buckets we used an interesting code that many of our peers did not use. The code is shown below:
+```python
+	# clears the elments in the original buckets
+        self.size = 0
+
+```
+
+- After completing all the functions every expected answer in the hash_main was correct.
  	
 - For the BST based map:
 
@@ -292,21 +308,24 @@ both of which expect a string of words, separated by linebreak.
 		| Finns: 27583       | Rogers: 52          |
 		| Många: 26818       | There: 44           |
 
-- What is the bucket list size, max bucket size and zero bucket ratio for HashSet, and the total node count, max depth and leaf count for BstMap, after having added all the words in the two large word files? (Hence, eight different numbers.)
 
-	- Bucket list size is the current number of buckets in the hashset. The max bucket size shows how many collisions the bucket with the most amount of collisions have, meaning how many elements the biggest bucket has. The zero bucket ratio is a function that shows the percentage of empty buckets there is in the hashset. It calculates the ratio using the formula:
+- Bucket list size is the current number of buckets in the hashset. The max bucket size shows how many collisions the bucket with the most amount of collisions have, meaning how many elements the biggest bucket has. The zero bucket ratio is a function that shows the percentage of empty buckets there is in the hashset. It calculates the ratio using the formula:
 
 	```python
 		ratio = empty_buckets / len(self.buckets)
 	```
 		
 
-- Explain how max bucket size and zero bucket ratio can be used to evaluate the quality of your hash function in HashSet. What are optimal/reasonable/poor values in both cases?
-	- The lower the max bucket size was and the smaller the zero bucket ratio the better the quality of the hash function. I used them to test several combinations of algorithms to find out which specific one produces the highest quality hash function and with some lectures by Dr. Rob Edwards and several arguments about which prime number creates the most uniqueness on stack overflow, just through trial and error and testing I came up with the golden algorithm. A good max bucket size would be anything from 1 to 20 for our purpose is good along with a zero bucket ratio between 20 to 45%. However, there might be other limiting factors to why you would get a higher ratio even if your algorithm is good. One example would be if you have rehashed recently so the number of elements is much smaller than the number of buckets, so for obvious reasons the ratio would be quite high. Poor value would be a max bucket size above 100 and a percentage above 50%.
 
-- Explain how max depth and leaf count can be used to evaluate the efficiency of the BstMap. What are optimal/reasonable/poor values in both cases?
-	
-	- The greater the depth, the less efficient/balanced the tree - More recursions would need to be executed
+- The lower the max bucket size was and the smaller the zero bucket ratio the better the quality of the hash function. I used them to test several combinations of algorithms to find out which specific one produces the highest quality hash function.
+- Looking at this one [lecture by Dr. Rob Edwards](https://www.youtube.com/watch?v=jtMwp0FqEcg&t=156s), just through trial and error and testing I came up with the golden algorithm.
+- A good max bucket size would be anything from 1 to 20 for our purpose is good along with a zero bucket ratio between 20 to 45%. 	
+	* However, there might be other limiting factors to why you would get a higher ratio even if your algorithm is good. One example would be if you have rehashed recently so the number of elements is much smaller than the number of buckets, so for obvious reasons the ratio would be quite high even though your hashfunction might be good.
+- A	poor value for the max bucket size would be anything above 100 and  for the empty bucket ratio, taking into account that the ``rehash()`` could have recently been used I would say a poort value would be anything above 50%.
+
+
+As for the Bst stuff:
+- The greater the depth, the less efficient/balanced the tree - More recursions would need to be executed
 	to reach the deepest leaf. Following this logic, I would say that max depths of 24 (for Brian) and 46
 	(for News) are decent results - notice how, despite the list size increase from 13k to 15 million, the
 	depth is less than two times the previous one.
@@ -319,7 +338,6 @@ both of which expect a string of words, separated by linebreak.
 	which seems to be the case for all balanced trees. 
 
 ## Project conclusions and lessons learned
-We separate technical issues from project related issues.
 ### Technical issues 
 - What were the major technical challanges as you see it? What parts were the hardest and most time consuming?
 	* Due to the fact that me and my partner were using different operating systems we struggled with the encoding on the txt file.
@@ -334,16 +352,13 @@ We separate technical issues from project related issues.
 - During the first few days of the project I (Zjeger) was faced with a family emergency which forced me to travel to Stockholm for a few days to deal with it. However I did not let that be a reason for my teammate to fail this project. He took care of part 1 of the project by himself and did a very good job. We divided part 2 and 3. I (Zjeger) felt I understood hashing the least so I wanted to take care of that so that I learn it. He took care of the BST. We communicated through social medias daily and we met on campus often to either catch up each other on progress, ask each other questions, give each other tips and also teach each other the things we did and learnt online.
 
 
-- For each individual team member: 
- 	* Describe which parts (or subtasks) of the project they were responsible for. Consider writing the report as a separate task. 
-	Try to identify main contributors and co-contributors.
-
- - Estimate hours spend each week (on average)
- - What lessons have you learned? What should you have done differently if you now were facing a similar project.
 
 ### Zjeger Zangana
 
-	-I was in charge of getting the hashing up and running. I did everything that was related to the hashset implementation. And because my partner had to be in charge of part 1 alone it was only fair I worked on the report as much as I could and left the the parts only he could fill. I spent on average 3 hours a day working on the mini project. Mostly because I took my time, went through several lectures on hashing, hashcodes, the effectiveness of prime numbers, the importance of powers and some java lectures that was related to hashing. I learnt how to micro manage a program and run certain parts of my program as this program required me to move step by step and to make sure everything works I got more familiar with printing results on my way forward. One thing I would do differently if I was to be in another project would be to ask more often rather than trying to solve it myself.
+	-I was in charge of getting the hashing up and running. I did everything that was related to the hashset implementation. And because my partner had to be in charge of part 1 alone it was only fair I worked on the report as much as I could and left the the parts only he could fill.
+	- I spent on average 3 hours a day working on the mini project. Mostly because I took my time, went through several lectures on hashing, hashcodes, the effectiveness of prime numbers, the importance of powers and some java lectures that was related to hashing.
+	- I learnt how to micro manage a program and run certain parts of my program as this program required me to move step by step and to make sure everything works. I got more familiar with printing results on my way forward.
+	- One thing I would do differently if I was to be in another project would be to ask more often rather than trying to solve it myself.
 
 ### Rodions Busurovs
 
