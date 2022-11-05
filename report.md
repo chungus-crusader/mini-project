@@ -330,8 +330,9 @@ both of which expect a string of words, separated by linebreak.
 		
 - Present a unique word count and the Top-10 lists for each of the two files.
 	
-	- The results are identical to what part 1 returns, the only difference being that the words are
-	returned as capitalized.
+	- The top-10 results are identical to what part 1 returns, the only difference being that the words are
+	returned as capitalized (for tidiness' sake):
+
 		| Top 10 news words: | Top 10 Brian words: |
 		|--------------------|---------------------|
 		| Under: 54042       | Brian: 368          |
@@ -344,6 +345,9 @@ both of which expect a string of words, separated by linebreak.
 		| Andra: 28074       | Pontius: 64         |
 		| Finns: 27583       | Rogers: 52          |
 		| Många: 26818       | There: 44           |
+	
+	- The unique word count for *Brian* and *News* are **2033** and **402315**, respectively. Of note is the fact that
+	the BST node count is identical to the unique word count.
 
 - How do the **max bucket size** and **zero bucket ratio** values affect the efficiency of a hashSet?
 
