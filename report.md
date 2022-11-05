@@ -5,9 +5,14 @@ Course: 1DV501
 Date of submission: 2022-11-XX
 
 ## Introduction  
-This is our mini project for the course 1DV501 - Network
-security - eng. This mini project consists of 3 parts.
-In part 1 use python's set class to count the number of unique words in the text files ``life_of_brian`` and ``swedish_news_2020`` that we use throughout all parts of the mini project. We also use python's dictionary class to produce a Top 10 list of the ten most frequently used words that we later in part 3 of our project repeat the computation using our own custom made hashset and BST implementation.
+- This is our mini project for the course 1DV501 - Network security - eng. This mini project consists of 3 parts.
+
+- In part 1, we utilised Python's set class to count the number of unique words in the text files ``life_of_brian``
+and ``swedish_news_2020`` that we use throughout the rest of the mini-project. We also use python's dictionary class
+to produce a Top 10 list of the most frequently used words. This operation is later repeated in part 3 of our project
+using our own HashSet and BstMap implementations.
+
+- It is of note that the custom-made data structures took a lot longer to process the data of our text files, which serves as proof of the in-built Python functions' remarkable efficiency and speed.
 
 ## Part 1: Count unique words 1
 
@@ -16,16 +21,15 @@ In part 1 use python's set class to count the number of unique words in the text
 - The file, *part-1/word-count.py*, consists of two functions - **count(words)** and **top(words)**, 
 both of which expect a string of words, separated by linebreak.
 
-	- **count(words)**, a much easier function of the two, returns a one-liner - the
-	length of a list of all words, split by linebreak, with every word lowercased,
-	which is converted into a set to eliminate all duplicates, and then back into a
-	list. Code below:
+	- **count(words)**, a much easier function of the two, returns a one-liner - the length of a list of all words,
+	split by linebreak, with every word lowercased, which is converted into a set to eliminate all duplicates, and
+	then back into a list. Code below:
 
 		```python
-		return len(list(set(map(lambda w: w.lower(), words.split('\n')))))
+			return len(list(set(map(lambda w: w.lower(), words.split('\n')))))
 		```
 
-	- **top(words)** Converts a passed in string of words, separated by "\n",
+	- **top(words)** converts a passed in string of words, separated by "\n",
 	into a list of lowercased words, split by the linebreak character, filtered
 	based on the length of a word *(i.e., only those words remain in list that
 	are > 4 in length)*.
@@ -33,7 +37,7 @@ both of which expect a string of words, separated by linebreak.
 		All operations above are done with a one-liner:
 
 		```python
-		lst = [(i).lower() for i in filter(lambda w:len(w) > 4, words.split('\n'))]
+			lst = [(i).lower() for i in filter(lambda w:len(w) > 4, words.split('\n'))]
 		```
 	
 		- The function moves on to declare a dict() of *counter*, serving as a container
@@ -87,40 +91,72 @@ both of which expect a string of words, separated by linebreak.
 
 
 ## Part 2: Implementing data structures
-- We were required to make a hash based set where the elements were to be stored in python lists that were stored in buckets which also basically a list. 
-- The goal was to start with a bucket list size of 8 and ``rehash()`` whenever the number of elements in the buckets became the same as the number of buckets. This rehash would simply just double the bucket list size. There were code skeletons made for the hash based set by our tutors that required us to include certain functions. 
-- We are allowed to add more functions if we wished so, howvever we were not allowed to remove any of the existing functions.
-- We had to make a hash code for each string in the already existing list in ``hash_main.py``. We weren't given a goal for how good our hashcode had to be however, we were told to try to fill as many buckets as possible and not leave most buckets empty.
-- We needed to make ``add()``, ``remove()``, ``contains()`` functions along with some other functions that would help us improve our hash algorithm later on for part 3 when we introduced the txt files to the hashset.
-:
- 	* The function ``add()`` calls the hash function for a specific word and what happens is that we iterate for each character in the word getting the ascci code for it, we also get the index of that character and to get the hashcode for it the ascii code of each letter is multiplied by 31 to the power of the index. The sum of that modolus the total amount of buckets gives us the hashcode, this way the smallest difference in the word would give a great difference in hashcode. The algorithm looks like this:
 
-	```python
-	def get_hash(self, word):
-        ascii_and_prime = 0
-		for char in str(word):
-            i = word.index(char)
-            asciii = ord(char)
-            ascii_and_prime += asciii * 31**i
-			mod = len(self.buckets)
-        return ascii_and_prime % mod
-	```
-- Because the ascii code is multiplied by the prime number 31 to the power of the index, it creates uniqueness in the hashcode so there is as little collision as possible. 
-	* I learnt this concept from Dr. Rob Edwards from San Diego State University where he explains how powerful the number 31 is for hashcodes with strings.
-- Some lectures were about java, however the concept is similar and as I played around with the index numbers, I got that without increasing my computing time that algorithm produced the smallest empty bucket ratio and produced the least amount of collision.
-- Once we have the hashcode for a word, the bucket at that postion is being checked for wheter the word is there or not with the code:
+- It was required to make a hash-based set, where the elements were to be stored in Python lists - **buckets** - stored in a **bucketList** - a 2-dimensional *list* of *buckets*. 
+
+- The goal was to start with a bucket list of size of 8 and ``rehash()`` whenever the total number of stored elements became equal to list size. This rehash would simply just double the bucket list size.
+
+- A hash index had to be made for each string in the already existing list in ``hash_main.py``. The project instructions did not require our ``rehash()`` code to be efficient, although we *were* encouraged to fill as many buckets as possible - preferrably most of them.
+
+- It was required to implement ``add()``, ``remove()``, and ``contains()`` methods, later to be used in part 3.
+
+ 	- The function ``add()`` accepts a string as a parameter. ``get_hash()`` is called with a parameter of this same word.
+	
+		- ``get_hash()`` has the word's characters iterated over, and their ASCII values **AND** the constant prime of *31*, to the *power* of char's *index*, added together.
+		
+		- The resulting number is *intended* to be large in case of a very large **bucket list** size, ensuring that
+		most buckets won't be empty.
+
+			- ``get_hash()`` code below:
+
+				```python
+					def get_hash(self, word):
+
+						ascii_and_prime = 0
+
+						for char in str(word):
+
+							i = word.index(char)
+							asciii = ord(char)
+
+							ascii_and_prime += asciii * 31**i
+							mod = len(self.buckets)
+
+						return ascii_and_prime % mod
+				```
+
+		- Because the **ascii code** is *multiplied* by the **const 31**, to the *power* of the **index**, it creates uniqueness in the hashcode so there is as little "collision" as possible.
+
+		- This concept was explained by Dr. Rob Edwards from San Diego State University. Edwards stressed how powerful the number 31 in particular is for generating hashcodes with strings.
+
+		- Some of his lectures were *Java*, however. Thankfully, that did not inhibit my ability to replicate the same logic in Python, as the principle of a *hashSet* is identical in any language. Efficient results for the **zero bucket ratio** and **max bucket size** were successfully achieved.
+
+- Once we have a word's **hash code**, it is tested whether the *bucket list* on this position already contains this element.
+
 	```python
 		if word not in self.buckets[hash_value]:
 	```
- 	* if the word is not in the bucket, we add it else we don't.
-- The counter for the number of elements is then incremented by 1 and then checked if it was equal to the number of buckets.
-	* If yes, the rehash function would be called.
--  Once this is called, a clone of the buckets is made, the existing buckets are then cleared and when the items in the clone buckets is pushed to the new buckets which iss twice the size. To clear the buckets we used an interesting code that many of our peers did not use. The code is shown below:
-```python
-	# clears the elments in the original buckets
-        self.size = 0
+ 	- We only add *word* to *bucket* if *bucket* does not already contain it.
 
-```
+- The **self.size** is then incremented by one.
+
+	* If *true*, the ``rehash()`` method is called.
+
+	- During its execution, a clone of the existing bucket list is made. **self.buckets**' value is reassigned to a 2-dimensional list of *empty* bucket lists, twice the previous size (i.e. 8 -> 16). The method then assigns the total self.size value to 0:
+		
+		```python
+			def rehash(self):
+				clone_buckets = self.buckets  # clone
+				self.buckets = [[] for i in range(len(self.buckets)*2)]  # new buckets twice the size
+				self.size = 0  # assign to 0
+		```
+	
+	- ``add()`` is then called on every bucket in **clone_buckets**, "refilling" the new empty bucket list.
+		```python
+			for bucket in clone_buckets:
+				for elements in bucket:
+					self.add(elements)
+		```
 
 - After completing all the functions every expected answer in the hash_main was correct.
  	
@@ -128,19 +164,19 @@ both of which expect a string of words, separated by linebreak.
 
 	- Having tinkered a bit with this data structure before, implementing some of the more "known" methods was fairly straightforward.
 
-	- By far one of the biggest roadblocks were ``to_string()``, even moreso than *as_lst*.
+	- By far one of the biggest roadblocks were ``to_string()``, even moreso than ``as_lst()``.
 
 		- For a considerable time, the method would append multiple trailing parentheses,
 		messing up the output (i.e. *{ ( ( ( ( (Adam, 27), (Ceve, 37)*...*(Zoe,41) ) ) ) )*).
 
-		- For a while, a potential solution was for ``to_string()`` call ``as_lst()``, which would be the one to make the list,
+		- For a while, a potential solution was for ``to_string()`` to call ``as_lst()``, which would be the one to make the list,
 		and then convert *that* into a joined string. Obviously, this was too slow.
 
 		- A potential cause was there were too many trailing whitespaces, which the code would then split the string with
 		in order to sort it alphabetically.
 		
-		- This was solved fairly easily by stripping the string of trailing whitespace, although that took much longer than we would
-		like to admit.
+		- This was solved fairly easily by stripping the string of trailing whitespace, although that took a lot of
+		testing to come up with.
 	
 	- ``put()`` and ``max_depth()`` took very little time to implement - the prior experience with BST's helped out a lot.
 	
@@ -222,8 +258,9 @@ both of which expect a string of words, separated by linebreak.
 	either in ``to_string()`` or ``as_lst()``, or the trailing whitespaces, which were dealt with as described above. 
 	
 	- The sorting errors were mostly caused by a misunderstanding of how the values were supposed to be sorted.
-	Initially, I suspected that we had to compare both the *values* **AND** the *keys*, only then to figure out that it was as easy
-	as just sorting the return value. Either way, the issues were resolved.
+	Initially, I suspected that we had to compare both the *values* **AND** the *keys*, constructing the tree this
+	way, only then to figure out that it was as easy as just sorting the return value. Either way, the issues were
+	resolved.
 
 ## Part 3: Count unique words 2
 - How did you implement the Top-10 part of the problem? Feel free to show code fragments.
@@ -308,23 +345,33 @@ both of which expect a string of words, separated by linebreak.
 		| Finns: 27583       | Rogers: 52          |
 		| Många: 26818       | There: 44           |
 
+- How do the **max bucket size** and **zero bucket ratio** values affect the efficiency of a hashSet?
 
-- Bucket list size is the current number of buckets in the hashset. The max bucket size shows how many collisions the bucket with the most amount of collisions have, meaning how many elements the biggest bucket has. The zero bucket ratio is a function that shows the percentage of empty buckets there is in the hashset. It calculates the ratio using the formula:
+	- Bucket list size is the current number of buckets in the hashset. 
 
-	```python
-		ratio = empty_buckets / len(self.buckets)
-	```
+	- The max bucket size simply displays the number of elements in the biggest bucket. The zero bucket ratio is a function that shows the ratio of empty to full buckets, following the easy formula below:
+
+		```python
+			ratio = empty_buckets / len(self.buckets)
+		```
+
+	- The *lower* the max bucket size is, and the *smaller* the zero bucket ratio, the better the efficiency of the rehash function. 
+
+	- Throughout my work, I used these values to test several combinations of algorithms to find out which of them produces the most efficient hashSet.
+
+	- With major aid from this [lecture by Dr. Rob Edwards](https://www.youtube.com/watch?v=jtMwp0FqEcg&t=156s), and through sheer trial and error, I came up with the "golden" equation.
+
+	- A good **max bucket size** would be anything from *1* to *20* - that value, along with a **zero bucket ratio** between *20* and *45*%, are the results I aimed for.
+
+		- However, there might be other limiting factors to why you would get a higher ratio even if your algorithm is considered efficient. 
 		
+		- One common case is when a rehash is just executed, which causes the number of buckets to be considerably higher than the number of values.
+
+	- A	poor value for the **max bucket size** would be anything *above 100*, and for the **empty bucket ratio**, taking into account that the ``rehash()`` could have recently been used, I would say a poor value would be anything *above 50%*.
 
 
-- The lower the max bucket size was and the smaller the zero bucket ratio the better the quality of the hash function. I used them to test several combinations of algorithms to find out which specific one produces the highest quality hash function.
-- Looking at this one [lecture by Dr. Rob Edwards](https://www.youtube.com/watch?v=jtMwp0FqEcg&t=156s), just through trial and error and testing I came up with the golden algorithm.
-- A good max bucket size would be anything from 1 to 20 for our purpose is good along with a zero bucket ratio between 20 to 45%. 	
-	* However, there might be other limiting factors to why you would get a higher ratio even if your algorithm is good. One example would be if you have rehashed recently so the number of elements is much smaller than the number of buckets, so for obvious reasons the ratio would be quite high even though your hashfunction might be good.
-- A	poor value for the max bucket size would be anything above 100 and  for the empty bucket ratio, taking into account that the ``rehash()`` could have recently been used I would say a poort value would be anything above 50%.
+- How do the **maximum depth** and the **leaf count** values affect the efficiency of the BstMap?:
 
-
-As for the Bst stuff:
 - The greater the depth, the less efficient/balanced the tree - More recursions would need to be executed
 	to reach the deepest leaf. Following this logic, I would say that max depths of 24 (for Brian) and 46
 	(for News) are decent results - notice how, despite the list size increase from 13k to 15 million, the
@@ -347,25 +394,30 @@ As for the Bst stuff:
 - How could the results be improved if you were given a bit more time to complete the task.
 	* I believe we tried really hard for this project and its not the outcome that would really change that much but I believe I personally could dig deeper into hashfunctions and find an even stronger algorithm that use less computation.
 
-### Project issues
+- ### Project issues
 - Describe how your team organized the work. How did you communicate? How often did you communicate?
+
 - During the first few days of the project I (Zjeger) was faced with a family emergency which forced me to travel to Stockholm for a few days to deal with it. However I did not let that be a reason for my teammate to fail this project. He took care of part 1 of the project by himself and did a very good job. We divided part 2 and 3. I (Zjeger) felt I understood hashing the least so I wanted to take care of that so that I learn it. He took care of the BST. We communicated through social medias daily and we met on campus often to either catch up each other on progress, ask each other questions, give each other tips and also teach each other the things we did and learnt online.
 
 
 
-### Zjeger Zangana
+- ### Zjeger Zangana
 
-	-I was in charge of getting the hashing up and running. I did everything that was related to the hashset implementation. And because my partner had to be in charge of part 1 alone it was only fair I worked on the report as much as I could and left the the parts only he could fill.
+
+	- I was in charge of getting the hashing up and running. I did everything that was related to the hashset implementation. And because my partner had to be in charge of part 1 alone it was only fair I worked on the report as much as I could and left the the parts only he could fill.
+
 	- I spent on average 3 hours a day working on the mini project. Mostly because I took my time, went through several lectures on hashing, hashcodes, the effectiveness of prime numbers, the importance of powers and some java lectures that was related to hashing.
+
 	- I learnt how to micro manage a program and run certain parts of my program as this program required me to move step by step and to make sure everything works. I got more familiar with printing results on my way forward.
+
 	- One thing I would do differently if I was to be in another project would be to ask more often rather than trying to solve it myself.
 
-### Rodions Busurovs
+- ### Rodions Busurovs
 
 	- One of my tasks was to implement part 1. Being the easiest of three parts, I would say it only took me some
 	2-4 hours in total, excluding all the comments and formatting. As my partner took the responsibility of
-	dealing with most of the report, I had a lot more time to focus on my part of the project.
-
+	dealing with most of the report, I had a lot more time to focus on my part of the project. Still, I spent a good 2-4 hours editing and completing our report.
+	
 	- Our lab assistant, Ola Flygt, by far contributed the most to helping me and my partner with issues that arose during our work.
 	
 	- I would say that I spent 2-4 hours a day working on the project, although there were days when practically
