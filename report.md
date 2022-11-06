@@ -2,7 +2,7 @@
 Members: Zjeger Zangana and Rodions Busurovs     
 Program: Network security (NGDNS-eng)  
 Course: 1DV501          
-Date of submission: 2022-11-XX
+Date of submission: 2022-11-06
 
 ## Introduction  
 - This is our mini project for the course 1DV501 - Network security - eng. This mini project consists of 3 parts.
